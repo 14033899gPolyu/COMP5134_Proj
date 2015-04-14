@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. --><project basedir="." default="build" name="COMP5134_proj">
+    <property environment="env"/>
+    <property name="junit.output.dir" value="junit"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.8"/>
+    <property name="source" value="1.8"/>
+	<!-- variable -->              	
+	<property name="build.dir" location="bin"/>
+	<property name="dist.dir" location="dist"/>
+	<property name="docs.dir" location="docs"/>
+	<property name="src.dir" location="src"/>               	
+    <path id="COMP5134_proj.classpath">
+        <pathelement location="bin"/>
+        <pathelement location="lib/junit-3.8.1.jar"/>
+        <pathelement location="lib/junit_project.jar"/>
+    </path>
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.ucls"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+	<!-- target clean -->              	
+	<target name="clean">
+	<delete dir="${build.dir}"/>
+	<delete dir="${dist.dir}"/>
+	<delete dir="${docs.dir}"/>
+	</target>
+    <target depends="clean" name="cleanall"/>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects"/>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="COMP5134_proj.classpath"/>
+        </javac>
+    </target>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+    <target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
+        <copy todir="${ant.library.dir}">
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </copy>
+        <unzip dest="${ant.library.dir}">
+            <patternset includes="jdtCompilerAdapter.jar"/>
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </unzip>
+    </target>
+    <target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
+        <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+        <antcall target="build"/>
+    </target>
+    <target name="AllTests (4)">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="JunitTestSuit.AllTests" todir="${junit.output.dir}"/>
+            <classpath refid="COMP5134_proj.classpath"/>
+        </junit>
+    </target>
+    <target name="icecream">
+        <java classname="icecreamshop.icecream" failonerror="true" fork="yes">
+            <classpath refid="COMP5134_proj.classpath"/>
+        </java>
+    </target>
+    <target name="icecreamshop (8)">
+        <java classname="proj.main.icecreamshop" failonerror="true" fork="yes">
+            <classpath refid="COMP5134_proj.classpath"/>
+        </java>
+    </target>
+    <target name="icecreamshop">
+        <java classname="icecreamshop.icecreamshop" failonerror="true" fork="yes">
+            <classpath refid="COMP5134_proj.classpath"/>
+        </java>
+    </target>
+    <target name="junitreport">
+        <junitreport todir="${junit.output.dir}">
+            <fileset dir="${junit.output.dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${junit.output.dir}"/>
+        </junitreport>
+    </target>
+	<!-- create docs -->              	
+	<target name="docs" depends="build-project">
+	<javadoc packagenames="src" sourcepath="${src.dir}" destdir="${docs.dir}">
+	<fileset dir="${src.dir}">
+	<include name="**"/>
+	</fileset>
+	</javadoc>
+	</target>
+	<!-- create jar -->
+	<target name="jar" depends="build-project">
+	<jar destfile="${dist.dir}/project.jar" basedir="${build.dir}">
+	<manifest>
+	<attribute name="Main-Class" value="proj.main.icecreamshop"/>
+	</manifest>
+	</jar>
+	</target>
+</project>
